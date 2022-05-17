@@ -12,6 +12,10 @@ namespace Business.Concrete
     public class UserService : IUserService
     {
         private readonly IUserDal _userDal;
+        public UserService(IUserDal userDal)
+        {
+            _userDal = userDal;
+        }
         public async Task<IEnumerable<UserDetailDTO>> GetListAsync()
         {
             List<UserDetailDTO> userDetailDTOs = new List<UserDetailDTO>();
@@ -35,18 +39,22 @@ namespace Business.Concrete
         public async Task<UserDTO> GetByIdAsync(int id)
         {
             var user = await _userDal.GetAsync(x => x.Id == id);
-            UserDTO userDTO = new UserDTO()
+            if (user != null)
             {
-                Address = user.Address,
-                DateOfBirth = user.DateOfBirth,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                Gender = user.Gender,
-                Id = user.Id,
-                LastName = user.LastName,
-                UserName = user.UserName
-            };
-            return userDTO;
+                UserDTO userDTO = new UserDTO()
+                {
+                    Address = user.Address,
+                    DateOfBirth = user.DateOfBirth,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    Gender = user.Gender,
+                    Id = user.Id,
+                    LastName = user.LastName,
+                    UserName = user.UserName
+                };
+                return userDTO; 
+            }
+            return null;
         }    
         public async Task<UserDTO> AddAsync(UserAddDTO userAddDTO)
         {
