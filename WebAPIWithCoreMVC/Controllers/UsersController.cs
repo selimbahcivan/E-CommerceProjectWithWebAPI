@@ -65,7 +65,7 @@ namespace WebAPIWithCoreMVC.Controllers
             UserUpdateViewModel userUpdateViewModel = new UserUpdateViewModel()
             {
                 FirstName = user.FirstName,
-                GenderID = user.Gender == true ? 1 : 2, 
+                GenderID = user.Gender == true ? 1 : 2,
                 LastName = user.LastName,
                 Address = user.Address,
                 DateOfBirth = user.DateOfBirth,
@@ -99,6 +99,37 @@ namespace WebAPIWithCoreMVC.Controllers
                 return RedirectToAction("Index");
             }
 
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _httpClient.GetFromJsonAsync<UserDTO>(url + "Users/GetById/" + id);
+
+            UserDeleteViewModel userDeleteViewModel = new UserDeleteViewModel()
+            {
+                FirstName = user.FirstName,
+                GenderName = user.Gender == true ? "Man" : "Woman",
+                LastName = user.LastName,
+                Address = user.Address,
+                DateOfBirth = user.DateOfBirth,
+                Email = user.Email,
+                Password = user.Password,
+                UserName = user.UserName
+            };
+            ViewBag.GenderList = GenderFill();
+
+            return View(userDeleteViewModel);
+        }
+        [HttpPost]
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirm(int id)
+        {
+            var isDelete = await _httpClient.DeleteAsync(url + "Users/Delete/" + id);
+            if (isDelete.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
             return View();
         }
         private dynamic GenderFill()
