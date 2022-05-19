@@ -35,7 +35,7 @@ namespace DataAccess.Concrete.EntityFramework.Mapping
                .IsRequired();
             builder.Property(x => x.CreatedDate).HasDefaultValue(DateTime.Now);
 
-            builder.HasData(new User
+            builder.HasData(new User()
             {
                 Id = 1,
                 FirstName = "Yavuz Selim",
