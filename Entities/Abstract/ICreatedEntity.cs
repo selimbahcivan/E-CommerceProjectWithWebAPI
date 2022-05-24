@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Entity.Abstract
+namespace Entities.Abstract
 {
     public interface ICreatedEntity
     {
