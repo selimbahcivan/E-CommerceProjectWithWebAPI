@@ -1,7 +1,7 @@
-﻿using Core.Entity.Abstract;
+﻿using Entities.Abstract;
 using System;
 
-namespace Core.Entity.Concrete
+namespace Entities.Concrete.BaseEntities
 {
     public class AuditableEntity : BaseEntity, ICreatedEntity, IUpdatedEntity
     {
