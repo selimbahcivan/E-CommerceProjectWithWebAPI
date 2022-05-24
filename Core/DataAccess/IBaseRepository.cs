@@ -1,4 +1,4 @@
-﻿using Entities.Abstract;
+﻿using Core.Entity.Abstract;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess
+namespace Core.DataAccess
 {
     public interface IBaseRepository<T> where T : class, IEntity, new()
     {

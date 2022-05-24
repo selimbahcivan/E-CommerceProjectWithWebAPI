@@ -1,10 +1,17 @@
 ﻿using Business.Abstract;
+using Core.Helpers;
+using Core.Helpers.JWT;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs.UserDTOs;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Concrete
@@ -12,9 +19,11 @@ namespace Business.Concrete
     public class UserService : IUserService
     {
         private readonly IUserDal _userDal;
-        public UserService(IUserDal userDal)
+        private readonly AppSettings _appSettings;
+        public UserService(IUserDal userDal, IOptions<AppSettings> appSettings)
         {
             _userDal = userDal;
+            _appSettings = appSettings.Value;
         }
         public async Task<IEnumerable<UserDetailDTO>> GetListAsync()
         {
@@ -53,10 +62,10 @@ namespace Business.Concrete
                     UserName = user.UserName,
                     Password = user.Password
                 };
-                return userDTO; 
+                return userDTO;
             }
             return null;
-        }    
+        }
         public async Task<UserDTO> AddAsync(UserAddDTO userAddDTO)
         {
             User user = new User()
@@ -78,11 +87,11 @@ namespace Business.Concrete
             UserDTO userDTO = new UserDTO()
             {
                 LastName = userAdd.LastName,
-                Address = userAdd.Address,                
+                Address = userAdd.Address,
                 DateOfBirth = userAdd.DateOfBirth,
                 Email = userAdd.Email,
                 FirstName = userAdd.FirstName,
-                Gender = userAdd.Gender,              
+                Gender = userAdd.Gender,
                 UserName = userAdd.UserName,
                 Id = userAdd.Id
             };
@@ -90,7 +99,7 @@ namespace Business.Concrete
         }
         public async Task<UserUpdateDTO> UpdateAsync(UserUpdateDTO userUpdateDTO)
         {
-            var getUser = await _userDal.GetAsync(x=>x.Id==userUpdateDTO.Id);
+            var getUser = await _userDal.GetAsync(x => x.Id == userUpdateDTO.Id);
             User user = new User()
             {
                 LastName = userUpdateDTO.LastName,
@@ -120,7 +129,7 @@ namespace Business.Concrete
                 Id = userUpdate.Id,
                 Password = userUpdate.Password,
             };
-            return newUserUpdateDTO; 
+            return newUserUpdateDTO;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -128,6 +137,35 @@ namespace Business.Concrete
             return await _userDal.DeleteAsync(id);
         }
 
+        public async Task<AccessToken> Authenticate(UserForLoginDto userForLoginDto)
+        {
+            var user = await _userDal.GetAsync(x => x.UserName == userForLoginDto.UserName && x.Password == userForLoginDto.Password);
+            if (user == null)
+                return null;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.SecurityKey);
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
 
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            AccessToken accessToken = new AccessToken()
+            {
+                Token = tokenHandler.WriteToken(token),
+                UserName = user.UserName,
+                Expiration = (DateTime)tokenDescriptor.Expires,
+                UserId = user.Id
+            };
+
+            return await Task.Run(() => accessToken);
+        }
     }
 }
+

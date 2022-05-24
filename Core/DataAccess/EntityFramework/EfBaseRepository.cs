@@ -1,4 +1,4 @@
-﻿using Entities.Abstract;
+﻿using Core.Entity.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace DataAccess.Concrete
+namespace Core.DataAccess.EntityFramework
 {
     public class EfBaseRepository<TEntity, TContext> : IBaseRepository<TEntity>
         where TEntity : class, IEntity, new()
