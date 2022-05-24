@@ -1,22 +1,20 @@
 using Business.Abstract;
 using Business.Concrete;
+using Core.Helpers;
 using DataAccess.Abstract;
 using DataAccess.Concrete.Contexts;
 using DataAccess.Concrete.EntityFramework;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace WebAPI
 {
@@ -33,19 +31,70 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             IServiceCollection servicesCollections = services.AddDbContext<ECommerceProjectWithWebAPIContext>(opt => opt.UseSqlServer("Server=.;" +
-                "Database=eCommerceProject;Trusted_Connection=True;" 
+                "Database=eCommerceProject;Trusted_Connection=True;"
                 , options => options.MigrationsAssembly("DataAccess")
                 .MigrationsHistoryTable(HistoryRepository.DefaultTableName, "dbo")));
 
 
             services.AddControllers();
-            services.AddTransient<IUserDal, EfUserDal>();
-            services.AddTransient<IUserService, UserService>();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Bearer Þemasýný Kullanan JWT Yetkilendirme Baþlýðý \r\n\r\n 'Bearer' boþluk api key giriniz."
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
             });
+
+            #region JWT
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+            #endregion
+
+
+            services.AddTransient<IUserDal, EfUserDal>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +109,8 @@ namespace WebAPI
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication(); // first this
+            app.UseAuthorization(); // second.
 
             app.UseEndpoints(endpoints =>
             {
