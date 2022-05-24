@@ -1,4 +1,4 @@
-﻿namespace Core.Entity.Abstract
+﻿namespace Entities.Abstract
 {
     public interface IDTO
     {

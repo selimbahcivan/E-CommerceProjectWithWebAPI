@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Entity.Abstract
+namespace Entities.Abstract
 {
     /*
      * Veri tabanına karşılık gelen tablolarda olacak
