@@ -46,7 +46,6 @@ namespace Core.DataAccess.EntityFramework
                 return entity;
             }
         }
-
         public async Task<bool> DeleteAsync(int id)
         {
             using (TContext context = new TContext())
@@ -59,7 +58,6 @@ namespace Core.DataAccess.EntityFramework
                 else
                     return false;
             }
-
         }
     }
 }

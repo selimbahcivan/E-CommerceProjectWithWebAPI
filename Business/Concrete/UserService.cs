@@ -1,31 +1,30 @@
 ﻿using Business.Abstract;
-using Core.Helpers;
-using Core.Helpers.JWT;
+using Business.Constants;
+using Core.Utilities.Responses;
+using Core.Utilities.Security.Token;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs.UserDTOs;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
     public class UserService : IUserService
     {
+        #region DI
         private readonly IUserDal _userDal;
         private readonly AppSettings _appSettings;
         public UserService(IUserDal userDal, IOptions<AppSettings> appSettings)
         {
             _userDal = userDal;
             _appSettings = appSettings.Value;
-        }
-        public async Task<IEnumerable<UserDetailDTO>> GetListAsync()
+        } 
+        #endregion
+        public async Task<ApiDataResponse<IEnumerable<UserDetailDTO>>> GetListAsync()
         {
             List<UserDetailDTO> userDetailDTOs = new List<UserDetailDTO>();
             var response = await _userDal.GetListAsync();
@@ -43,9 +42,9 @@ namespace Business.Concrete
                     Id = item.Id,
                 });
             }
-            return userDetailDTOs;
+            return new SuccessApiDataResponse<IEnumerable<UserDetailDTO>>(userDetailDTOs, Messages.Listed);
         }
-        public async Task<UserDTO> GetByIdAsync(int id)
+        public async Task<ApiDataResponse<UserDTO>> GetByIdAsync(int id)
         {
             var user = await _userDal.GetAsync(x => x.Id == id);
             if (user != null)
@@ -60,13 +59,13 @@ namespace Business.Concrete
                     Id = user.Id,
                     LastName = user.LastName,
                     UserName = user.UserName,
-                    Password = user.Password
+
                 };
-                return userDTO;
+                return new SuccessApiDataResponse<UserDTO>(userDTO, Messages.Listed);
             }
-            return null;
+            return new ErrorApiDataResponse<UserDTO>(null, Messages.NotListed);
         }
-        public async Task<UserDTO> AddAsync(UserAddDTO userAddDTO)
+        public async Task<ApiDataResponse<UserDTO>> AddAsync(UserAddDTO userAddDTO)
         {
             User user = new User()
             {
@@ -95,9 +94,9 @@ namespace Business.Concrete
                 UserName = userAdd.UserName,
                 Id = userAdd.Id
             };
-            return userDTO;
+            return new SuccessApiDataResponse<UserDTO>(userDTO, Messages.Added);
         }
-        public async Task<UserUpdateDTO> UpdateAsync(UserUpdateDTO userUpdateDTO)
+        public async Task<ApiDataResponse<UserUpdateDTO>> UpdateAsync(UserUpdateDTO userUpdateDTO)
         {
             var getUser = await _userDal.GetAsync(x => x.Id == userUpdateDTO.Id);
             User user = new User()
@@ -129,43 +128,43 @@ namespace Business.Concrete
                 Id = userUpdate.Id,
                 Password = userUpdate.Password,
             };
-            return newUserUpdateDTO;
+            return new SuccessApiDataResponse<UserUpdateDTO>(newUserUpdateDTO, Messages.Updated);
         }
-
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<ApiDataResponse<bool>> DeleteAsync(int id)
         {
-            return await _userDal.DeleteAsync(id);
+            var isDelete = await _userDal.DeleteAsync(id);
+            return new SuccessApiDataResponse<bool>(isDelete, Messages.Deleted);
         }
 
-        public async Task<AccessToken> Authenticate(UserForLoginDto userForLoginDto)
-        {
-            var user = await _userDal.GetAsync(x => x.UserName == userForLoginDto.UserName && x.Password == userForLoginDto.Password);
-            if (user == null)
-                return null;
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.SecurityKey);
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
+        //public async Task<ApiDataResponse<AccessToken>> Authenticate(UserForLoginDto userForLoginDto)
+        //{
+        //    var user = await _userDal.GetAsync(x => x.UserName == userForLoginDto.UserName && x.Password == userForLoginDto.Password);
+        //    if (user == null)
+        //        return null;
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var key = Encoding.ASCII.GetBytes(_appSettings.SecurityKey);
+        //    var tokenDescriptor = new SecurityTokenDescriptor()
+        //    {
+        //        Subject = new ClaimsIdentity(new[]
+        //        {
+        //            new Claim(ClaimTypes.Name, user.Id.ToString())
+        //        }),
+        //        Expires = DateTime.UtcNow.AddDays(1),
+        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+        //            SecurityAlgorithms.HmacSha256Signature)
+        //    };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            AccessToken accessToken = new AccessToken()
-            {
-                Token = tokenHandler.WriteToken(token),
-                UserName = user.UserName,
-                Expiration = (DateTime)tokenDescriptor.Expires,
-                UserId = user.Id
-            };
+        //    var token = tokenHandler.CreateToken(tokenDescriptor);
+        //    AccessToken accessToken = new AccessToken()
+        //    {
+        //        Token = tokenHandler.WriteToken(token),
+        //        UserName = user.UserName,
+        //        Expiration = (DateTime)tokenDescriptor.Expires,
+        //        UserId = user.Id
+        //    };
 
-            return await Task.Run(() => accessToken);
-        }
+        //    return await Task.Run(() => accessToken);
+        //}
     }
 }
 
