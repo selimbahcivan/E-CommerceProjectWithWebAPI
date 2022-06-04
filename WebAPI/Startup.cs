@@ -1,5 +1,7 @@
+using AutoMapper;
 using Business.Abstract;
 using Business.Concrete;
+using Business.Mappings;
 using Core.Utilities.Security.Token;
 using Core.Utilities.Security.Token.Jwt;
 using DataAccess.Abstract;
@@ -36,7 +38,6 @@ namespace WebAPI
                 , options => options.MigrationsAssembly("DataAccess")
                 .MigrationsHistoryTable(HistoryRepository.DefaultTableName, "dbo")));
 
-
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -70,6 +71,7 @@ namespace WebAPI
             });
 
             #region JWT
+
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
@@ -91,13 +93,27 @@ namespace WebAPI
                     ValidateAudience = false
                 };
             });
-            #endregion
+
+            #endregion JWT
+
+            #region AutoMapper
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            var mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            #endregion AutoMapper
 
             #region Dependency Injection
+
             services.AddTransient<IUserDal, EfUserDal>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITokenService, JwtTokenService>();
-            #endregion
+
+            #endregion Dependency Injection
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

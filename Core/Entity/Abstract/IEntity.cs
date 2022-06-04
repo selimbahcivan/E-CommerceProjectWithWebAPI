@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Entity.Abstract
+﻿namespace Core.Entity.Abstract
 {
     /*
      * Veri tabanına karşılık gelen tablolarda olacak
      */
+
     public interface IEntity
     {
         int Id { get; set; }

@@ -11,8 +11,9 @@ namespace WebAPIWithCoreMVC.ViewModels
         public string Password { get; set; }
         public int GenderID { get; set; }
 
-        [DataType(DataType.Date)] 
+        [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
+
         public string Email { get; set; }
         public string Address { get; set; }
     }

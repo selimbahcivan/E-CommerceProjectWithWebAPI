@@ -1,12 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Utilities.Security.Token.Jwt
 {
@@ -21,8 +18,8 @@ namespace Core.Utilities.Security.Token.Jwt
 
         public JwtTokenService()
         {
-
         }
+
         public AccessToken CreateToken(int userId, string userName)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -47,7 +44,6 @@ namespace Core.Utilities.Security.Token.Jwt
                 UserName = userName,
                 UserId = userId
             };
-
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Core.DataAccess.EntityFramework
                     : await context.Set<TEntity>().Where(filter).ToListAsync();
             }
         }
+
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter)
         {
             using (TContext context = new TContext())
@@ -28,6 +29,7 @@ namespace Core.DataAccess.EntityFramework
                 return await context.Set<TEntity>().SingleOrDefaultAsync(filter);
             }
         }
+
         public async Task<TEntity> AddAsync(TEntity entity)
         {
             using (TContext context = new TContext())
@@ -37,6 +39,7 @@ namespace Core.DataAccess.EntityFramework
                 return entity;
             }
         }
+
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             using (TContext context = new TContext())
@@ -46,6 +49,7 @@ namespace Core.DataAccess.EntityFramework
                 return entity;
             }
         }
+
         public async Task<bool> DeleteAsync(int id)
         {
             using (TContext context = new TContext())

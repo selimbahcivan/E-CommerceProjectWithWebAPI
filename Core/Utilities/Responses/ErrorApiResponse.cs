@@ -4,11 +4,10 @@
     {
         public ErrorApiResponse() : base(success: false)
         {
-
         }
+
         public ErrorApiResponse(string message) : base(success: false, message: message)
         {
-
         }
     }
 }

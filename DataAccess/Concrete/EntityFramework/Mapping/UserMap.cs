@@ -49,8 +49,6 @@ namespace DataAccess.Concrete.EntityFramework.Mapping
                 Email = "ysb@gmail.com",
                 UserName = "yselimb"
             });
-
-
         }
     }
 }

@@ -6,6 +6,7 @@
         {
             Data = data;
         }
+
         public SuccessApiDataResponse(T data, string message) : base(success: true, message: message)
         {
             Data = data;

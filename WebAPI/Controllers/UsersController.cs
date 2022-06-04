@@ -1,6 +1,5 @@
 ﻿using Business.Abstract;
 using Entities.DTOs.UserDTOs;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -12,10 +11,12 @@ namespace WebAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+
         public UsersController(IUserService userService)
         {
             _userService = userService;
         }
+
         [HttpGet]
         [Route("[action]")]
         public async Task<IActionResult> GetList()
@@ -25,6 +26,7 @@ namespace WebAPI.Controllers
                 return Ok(result);
             return BadRequest();
         }
+
         [HttpGet]
         [Route("[action]/{id:int}")]
         public async Task<IActionResult> GetById(int id)
@@ -34,6 +36,7 @@ namespace WebAPI.Controllers
                 return Ok(result);
             return BadRequest();
         }
+
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> Add([FromBody] UserAddDTO userAddDTO)
@@ -43,6 +46,7 @@ namespace WebAPI.Controllers
                 return Ok(result);
             return BadRequest();
         }
+
         [HttpPut]
         [Route("[action]")]
         public async Task<IActionResult> Update([FromBody] UserUpdateDTO userUpdateDTO)
@@ -52,6 +56,7 @@ namespace WebAPI.Controllers
                 return Ok(result);
             return BadRequest();
         }
+
         [HttpDelete]
         [Route("[action]/{id:int}")]
         public async Task<IActionResult> Delete(int id)
@@ -61,7 +66,7 @@ namespace WebAPI.Controllers
                 return Ok(true);
             return BadRequest(false);
         }
-        
+
         //[AllowAnonymous]
         //[HttpPost]
         //[Route("[action]")]
@@ -73,6 +78,5 @@ namespace WebAPI.Controllers
         //    else
         //        return BadRequest();
         //}
-
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface ITokenService
     {
-        AccessToken CreateToken(int userId, string userName); 
+        AccessToken CreateToken(int userId, string userName);
     }
 }

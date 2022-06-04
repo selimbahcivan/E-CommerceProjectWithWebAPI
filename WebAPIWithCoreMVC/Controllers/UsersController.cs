@@ -1,6 +1,5 @@
 ﻿using Entities.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -12,28 +11,34 @@ namespace WebAPIWithCoreMVC.Controllers
     public class UsersController : Controller
     {
         #region Defines
+
         private readonly HttpClient _httpClient;
         private string url = "http://localhost:63510/api/";
-        #endregion
+
+        #endregion Defines
 
         #region Ctor
+
         public UsersController(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
-        #endregion
+
+        #endregion Ctor
 
         public async Task<IActionResult> Index()
         {
             var users = await _httpClient.GetFromJsonAsync<List<UserDetailDTO>>(url + "Users/GetList");
             return View(users);
         }
+
         [HttpGet]
         public IActionResult Add()
         {
             ViewBag.GenderList = GenderFill();
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Add(UserAddViewModel userAddViewModel)
         {
@@ -47,7 +52,6 @@ namespace WebAPIWithCoreMVC.Controllers
                 Email = userAddViewModel.Email,
                 Password = userAddViewModel.Password,
                 UserName = userAddViewModel.UserName
-
             };
             HttpResponseMessage responseMessage = await _httpClient
                 .PostAsJsonAsync(url + "Users/Add", userAddDTO);
@@ -57,6 +61,7 @@ namespace WebAPIWithCoreMVC.Controllers
             }
             return View();
         }
+
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
@@ -77,6 +82,7 @@ namespace WebAPIWithCoreMVC.Controllers
 
             return View(userUpdateViewModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> Update(int id, UserUpdateViewModel userUpdateViewModel)
         {
@@ -101,6 +107,7 @@ namespace WebAPIWithCoreMVC.Controllers
 
             return View();
         }
+
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -121,6 +128,7 @@ namespace WebAPIWithCoreMVC.Controllers
 
             return View(userDeleteViewModel);
         }
+
         [HttpPost]
         [ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirm(int id)
@@ -132,6 +140,7 @@ namespace WebAPIWithCoreMVC.Controllers
             }
             return View();
         }
+
         private dynamic GenderFill()
         {
             List<Gender> genders = new List<Gender>();
@@ -139,13 +148,11 @@ namespace WebAPIWithCoreMVC.Controllers
             genders.Add(new Gender() { Id = 2, GenderName = "Woman" });
             return genders;
         }
+
         private class Gender
         {
             public int Id { get; set; }
             public string GenderName { get; set; }
         }
-
-
-
     }
 }

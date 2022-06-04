@@ -14,6 +14,7 @@ namespace WebAPIWithCoreMVC.ViewModels
 
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
+
         public string Email { get; set; }
         public string Address { get; set; }
     }
