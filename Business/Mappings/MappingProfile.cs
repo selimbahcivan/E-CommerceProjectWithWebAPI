@@ -19,6 +19,9 @@ namespace Business.Mappings
 
             CreateMap<User, UserUpdateDTO>();
             CreateMap<UserUpdateDTO, User>();
+
+            CreateMap<UserDTO, UserUpdateDTO>();
+            CreateMap<UserUpdateDTO, UserDTO>();
         }
     }
 }

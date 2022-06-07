@@ -31,7 +31,7 @@ namespace Business.Concrete
 
         #endregion DI
 
-        public async Task<ApiDataResponse<IEnumerable<UserDetailDTO>>> GetListAsync(Expression<Func<User, bool>> filter==null)
+        public async Task<ApiDataResponse<IEnumerable<UserDetailDTO>>> GetListAsync(Expression<Func<User, bool>> filter=null)
         {
             if (filter == null)
             {

@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _userService.DeleteAsync(id);
-            if (result != null)
+            if (result.Data)
                 return Ok(true);
             return BadRequest(false);
         }
@@ -70,9 +70,9 @@ namespace WebAPI.Controllers
         //[AllowAnonymous]
         //[HttpPost]
         //[Route("[action]")]
-        //public async Task<IActionResult> Authenticate([FromBody] UserForLoginDto userForLoginDto)
+        //public async Task<IActionResult> Authenticate([FromBody] LoginDto loginDto)
         //{
-        //    var result = await _userService.Authenticate(userForLoginDto);
+        //    var result = await _userService.Authenticate(loginDto);
         //    if (result != null)
         //        return Ok(result);
         //    else

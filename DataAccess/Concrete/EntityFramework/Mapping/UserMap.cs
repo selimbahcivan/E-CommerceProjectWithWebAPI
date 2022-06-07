@@ -35,6 +35,7 @@ namespace DataAccess.Concrete.EntityFramework.Mapping
                .IsRequired();
             builder.Property(x => x.CreatedDate).HasDefaultValue(DateTime.Now);
 
+
             builder.HasData(new User()
             {
                 Id = 1,
@@ -48,6 +49,7 @@ namespace DataAccess.Concrete.EntityFramework.Mapping
                 CreatedUserId = 1,
                 Email = "ysb@gmail.com",
                 UserName = "yselimb"
+                
             });
         }
     }
