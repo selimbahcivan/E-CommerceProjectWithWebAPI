@@ -17,5 +17,7 @@ namespace Entities.DTOs.UserDTOs
         public string PhoneNumber { get; set; }
         public string Token { get; set; }
         public DateTime? TokenExpireDate { get; set; }
+        public int UpdatedUserId { get; set; }
+        public DateTime UpdatedTime { get; set; } = DateTime.Now;
     }
 }
