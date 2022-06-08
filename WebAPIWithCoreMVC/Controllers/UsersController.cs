@@ -1,4 +1,4 @@
-﻿using Entities.DTOs.UserDTOs;
+﻿using Entities.DTOs.User;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Http;

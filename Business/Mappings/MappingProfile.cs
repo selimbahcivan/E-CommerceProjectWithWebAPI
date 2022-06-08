@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Concrete;
-using Entities.DTOs.UserDTOs;
+using Entities.DTOs.User;
 
 namespace Business.Mappings
 {

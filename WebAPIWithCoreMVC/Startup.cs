@@ -41,6 +41,13 @@ namespace WebAPIWithCoreMVC
 
             app.UseEndpoints(endpoints =>
             {
+                // ScaffoldingReadMe'den kopyalandý.
+                //Admin/Home/Index
+                endpoints.MapAreaControllerRoute(
+                areaName: "Admin", 
+                name: "Admin",
+                pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+                //Home/Index
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Users}/{action=Index}/{id?}");

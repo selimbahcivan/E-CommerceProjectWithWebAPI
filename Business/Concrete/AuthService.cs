@@ -3,7 +3,8 @@ using Business.Abstract;
 using Business.Constants;
 using Core.Utilities.Responses;
 using Core.Utilities.Security.Token;
-using Entities.DTOs.UserDTOs;
+using Entities.DTOs.Auth;
+using Entities.DTOs.User;
 using System;
 using System.Threading.Tasks;
 

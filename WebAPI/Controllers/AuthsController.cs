@@ -1,12 +1,12 @@
 ﻿using Business.Abstract;
-using Entities.DTOs.UserDTOs;
+using Entities.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class AuthsController : ControllerBase

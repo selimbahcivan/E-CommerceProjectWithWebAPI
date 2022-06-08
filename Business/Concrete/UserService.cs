@@ -5,7 +5,7 @@ using Core.Utilities.Responses;
 using Core.Utilities.Security.Token;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using Entities.DTOs.UserDTOs;
+using Entities.DTOs.User;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;

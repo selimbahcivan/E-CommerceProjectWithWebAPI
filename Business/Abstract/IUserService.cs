@@ -1,6 +1,6 @@
 ﻿using Core.Utilities.Responses;
 using Entities.Concrete;
-using Entities.DTOs.UserDTOs;
+using Entities.DTOs.User;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

@@ -1,7 +1,7 @@
 ﻿using Core.Entity.Abstract;
 using System;
 
-namespace Entities.DTOs.UserDTOs
+namespace Entities.DTOs.User
 {
     public class UserDTO : IDTO
     {
