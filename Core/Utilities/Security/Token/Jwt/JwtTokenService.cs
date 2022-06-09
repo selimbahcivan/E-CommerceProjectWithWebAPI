@@ -19,7 +19,6 @@ namespace Core.Utilities.Security.Token.Jwt
         public JwtTokenService()
         {
         }
-
         public AccessToken CreateToken(int userId, string userName)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
