@@ -58,10 +58,10 @@ namespace WebAPIWithCoreMVC
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+
+            app.UseExceptionHandler("/Home/Error");
+
+            app.UseStatusCodePagesWithRedirects("/Admin/Error/MyStatusCode?code={0}");
 
             app.UseSession(); //ApiService AuthContr. conf. sonrasý eklendi
 
